@@ -1,0 +1,9 @@
+{{ $cMsg := toInt (dbGet 200 "cMsg").Value}}
+{{ $xMsg := getMessage nil $cMsg}}
+{{ $cRnd := toInt (dbGet 202 "cRnd").Value}}
+
+{{if (reFind "OPEN" (index $xMsg.Embeds 0).Description)}}
+  {{$monk := (print "Chocolate")}}
+{{else}}
+  {{sendMessageNoEscape nil (cembed "description" (print "ATTENTION <@&" 1082803556169547858 ">!!! ALL SLOTS ARE NOW FULL!!!\nKeep your eye out for the next Cache Drop so we can determine who won!!!"))}}
+{{end}}

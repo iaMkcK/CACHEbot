@@ -1,0 +1,13 @@
+{{$args := parseArgs 1 "Proper way of using is /cWinner @<User Who Won!> -- ex: /cWinner <@186921411359670275>\nIf you continue to need help, please contact <@186921411359670275>." (carg "userid" "Winner of Round") }}
+{{$cWin := ($args.Get 0)}}
+
+{{$cRnd := toInt (dbGet 202 "cRnd").Value}}
+{{if in .Member.Roles 1084094169498271844}}
+  {{if $args.IsSet 0}}
+    {{ $cMsg := sendMessageNoEscapeRetID 1082576076758335498 (cembed "title" (print "G.A.Y. Epic Cache Bet Round " $cRnd "!") "description" (print "Congratulations!!! Congratulations!!! Congratulations!!!\nWe have a winner!!! <@" $cWin "> has won Round " $cRnd "!!!\nPlease ensure that if you bet, you pay <@" $cWin "> for winning!!!\nPlease React to the Green Check-Mark below to show you paid!!!")) }}
+    {{ addMessageReactions 1082576076758335498 $cMsg ":white_check_mark:" }}
+    {{ $cRnd2 := dbIncr 202 "cRnd" 1 }}
+    {{ dbSet 202 "cRnd" $cRnd2 }}
+    {{ execCC 2 1081948603922259998 0 "launch" }}
+  {{end}}
+{{end}}
