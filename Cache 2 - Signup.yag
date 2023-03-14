@@ -1,14 +1,27 @@
+{{/* 
+        Trigger Type: None [Initialized by CC #1]
+
+        Purpose: Posts the Sign-Up Message to specified channel & pins it. Grabs Round Number and Bet
+            Amount from previous command via Database Calls, and sets the Reactions to the message.
+            This message will be re-used at the end, so it stays in a loop.
+
+        Copyright (c): i aM kcK, 2023
+        License: MIT
+        Repository: https://github.com/iaMkcK/CACHEbot
+*/}}
+
+
 {{ $cBet := toInt (dbGet 201 "cBet").Value }}
 {{ $cRnd := toInt (dbGet 202 "cRnd").Value }}
-
-{{ $cMsg := sendMessageNoEscapeRetID 1081948603922259998 (cembed "title" (print "G.A.Y. Epic Cache Bet Round " $cRnd "!") "description" (print "LADIES & GENTLEMEN -- A NEW EPIC CACHE BETTING ROUND " $cRnd "!!!\n\nReact to the corresponding emoji to bet on what you think will drop next!\n Once the cache drops in CCO, we'll announce the winner!\nBet Amount is currently " $cBet " AI Cores [Be sure you have it BEFORE betting]!\n All Bet Slots MUST be filled for round to start [Can & WILL take time!]\n\nReact to one of the following emojis for what you wish to bet on:\n\nEpic Cache Slots:\n:one: Primary Weapon - OPEN\n:two: Special Weapon - OPEN\n:three: Destructive Weapon - OPEN\n:four: Helmet - OPEN\n:five: Upper Armour - OPEN\n:six: Lower Armour - OPEN\n:seven: Boots - OPEN\n:eight: Upgrade Module - OPEN")) }}
+{{ sendMessageNoEscape 1081948603922259998 (cembed "description" (print "ATTENTION! ATTENTION!! ATTENTION!!! <@&1082803556169547858> -- NEW ROUND IS STARTING -- GO OVER TO <#1082576076758335498> TO PLACE YOUR BETS!!! ATTENTION!!! ATTENTION!! ATTENTION!")) }}
+{{ $cMsg := sendMessageNoEscapeRetID 1082576076758335498 (cembed "title" (print "G.A.Y. Epic Cache Bet Round " $cRnd "!") "description" (print "LADIES & GENTLEMEN -- A NEW EPIC CACHE BETTING ROUND " $cRnd "!!!\n\nReact to the corresponding emoji to bet on what you think will drop next!\n Once the cache drops in CCO, we'll announce the winner!\nBet Amount is currently " $cBet " AI Cores [Be sure you have it BEFORE betting]!\n All Bet Slots MUST be filled for round to start [Can & WILL take time!]\n\nReact to one of the following emojis for what you wish to bet on:\n\nEpic Cache Slots:\n:one: Primary Weapon - OPEN\n:two: Special Weapon - OPEN\n:three: Destructive Weapon - OPEN\n:four: Helmet - OPEN\n:five: Upper Armour - OPEN\n:six: Lower Armour - OPEN\n:seven: Boots - OPEN\n:eight: Upgrade Module - OPEN")) }}
 {{ dbSet 200 "cMsg" (str $cMsg) }}
-{{ addMessageReactions 1081948603922259998 $cMsg ":one:" }}
-{{ addMessageReactions 1081948603922259998 $cMsg ":two:" }}
-{{ addMessageReactions 1081948603922259998 $cMsg ":three:" }}
-{{ addMessageReactions 1081948603922259998 $cMsg ":four:" }}
-{{ addMessageReactions 1081948603922259998 $cMsg ":five:" }}
-{{ addMessageReactions 1081948603922259998 $cMsg ":six:" }}
-{{ addMessageReactions 1081948603922259998 $cMsg ":seven:" }}
-{{ addMessageReactions 1081948603922259998 $cMsg ":eight:" }}
-{{ pinMessage 1081948603922259998 $cMsg }}
+{{ addMessageReactions 1082576076758335498 $cMsg ":one:" }}
+{{ addMessageReactions 1082576076758335498 $cMsg ":two:" }}
+{{ addMessageReactions 1082576076758335498 $cMsg ":three:" }}
+{{ addMessageReactions 1082576076758335498 $cMsg ":four:" }}
+{{ addMessageReactions 1082576076758335498 $cMsg ":five:" }}
+{{ addMessageReactions 1082576076758335498 $cMsg ":six:" }}
+{{ addMessageReactions 1082576076758335498 $cMsg ":seven:" }}
+{{ addMessageReactions 1082576076758335498 $cMsg ":eight:" }}
+{{ pinMessage 1082576076758335498 $cMsg }}
