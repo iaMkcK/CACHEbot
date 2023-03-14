@@ -1,7 +1,33 @@
+{{/* 
+        Trigger Type: Command - /cStart <Round Number> <AI Bet>
+
+        Role Reqs: Admin Only
+
+        Purpose: Initialize Bot, specifying which round, as well as how many AI each person bets.
+            This sets the arguments from the command to variables that get stored to the Database,  
+            and once set, it initializes the Sign-Up Message via ExecCC #2.
+
+        NOTE: If you wish to use this bot on your own server, you must have 3 things:
+            #1 - Change ChannelID '1082576076758335498' to your own Betting-&-Winning-Announcement Channel #
+            #2 - Change ChannelID '1081948603922259998' to your own Lounge Room Channel #
+            #3 - Change RoleID '1084094169498271844' to your own # [Bot Wranglers/Admins]
+        
+            I've tried hard to ensure that even on a fresh install, this should set every database entry you
+            could need, but I could have missed some things. If you aren't sure about something, please reach
+            out to me on Discord or in CCO, in CCO I'm @SlightyPickledTree and on Discord iaMkcK#7193
+
+        Copyright (c): i aM kcK, 2023
+        Special Thanks throughout to: 'Black Wolf#0001' , 'Henri#5836' , 'Lighthouse#1337' , 'lzodd#7325'
+        License: MIT
+        Repository: https://github.com/iaMkcK/CACHEbot
+*/}}
+
 {{ $args := parseArgs 1 "Proper way of using is /cStart <Round Number> <AI Bet> -- Ensure the bet field is only numbers, ex: /cStart 7 200\nIf you continue to need help, please contact <@186921411359670275>." (carg "int" "round number") (carg "int" "bet amount") }}
 
 {{ $cRnd := ($args.Get 0) }}
 {{ dbSet 202 "cRnd" (str $cRnd) }}
 {{ $cBet := ($args.Get 1) }}
 {{ dbSet 201 "cBet" (str $cBet) }}
-{{ execCC 2 1081948603922259998 0 "launch"}}
+{{ execCC 2 1081948603922259998 0 "launch" }}
+
+{{ deleteTrigger 0 }}
