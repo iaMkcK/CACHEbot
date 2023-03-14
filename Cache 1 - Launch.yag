@@ -22,6 +22,7 @@
         Repository: https://github.com/iaMkcK/CACHEbot
 */}}
 
+
 {{ $args := parseArgs 1 "Proper way of using is /cStart <Round Number> <AI Bet> -- Ensure the bet field is only numbers, ex: /cStart 7 200\nIf you continue to need help, please contact <@186921411359670275>." (carg "int" "round number") (carg "int" "bet amount") }}
 
 {{ $cRnd := ($args.Get 0) }}
