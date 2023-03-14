@@ -13,3 +13,5 @@ I've tried hard to ensure that even on a fresh install, this should set every da
 about something, please reach out to me on Discord or in CCO, in CCO I'm @SlightyPickledTree and on Discord iaMkcK#7193.
 
 Once again, thank you for spending time in checking out my project, and also reading this README. It is appreciated beyond belief <3
+
+- kcK
