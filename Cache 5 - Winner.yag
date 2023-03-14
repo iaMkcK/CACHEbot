@@ -1,13 +1,36 @@
-{{$args := parseArgs 1 "Proper way of using is /cWinner @<User Who Won!> -- ex: /cWinner <@186921411359670275>\nIf you continue to need help, please contact <@186921411359670275>." (carg "userid" "Winner of Round") }}
-{{$cWin := ($args.Get 0)}}
+{{/* 
+        Trigger Type: Command - /cWinner @<User>
 
-{{$cRnd := toInt (dbGet 202 "cRnd").Value}}
+        Role Reqs: Admin Only
+
+        Purpose: This command takes the mentioned User ID, and announces that they have won.
+          It also reacts to the announcement to easily enable users to show they have paid
+          for their bet by reacting. It does not check to see if the winner was even in the
+          game, and it does not announce what they won with, or who all now has to pay the
+          winner. I may later integrate something that does this, but for now, it works. :D
+
+          .. Oh, it also increases the round number, and reinitializes CC #2 thus looping.
+
+        Copyright (c): i aM kcK, 2023
+        License: MIT
+        Repository: https://github.com/iaMkcK/CACHEbot
+*/}}
+
+
+{{ $args := parseArgs 1 "Proper way of using is /cWinner @<User Who Won!> -- ex: /cWinner <@186921411359670275>\nIf you continue to need help, please contact <@186921411359670275>." (carg "userid" "Winner of Round") }}
+{{ $cWin := ($args.Get 0) }}
+
+{{ $cRnd := toInt (dbGet 202 "cRnd").Value }}
+{{ $cMsg := toInt (dbGet 200 "cMsg").Value }}
+{{ $xMsg := getMessage 1082576076758335498 $cMsg }}
 {{if in .Member.Roles 1084094169498271844}}
   {{if $args.IsSet 0}}
-    {{ $cMsg := sendMessageNoEscapeRetID 1082576076758335498 (cembed "title" (print "G.A.Y. Epic Cache Bet Round " $cRnd "!") "description" (print "Congratulations!!! Congratulations!!! Congratulations!!!\nWe have a winner!!! <@" $cWin "> has won Round " $cRnd "!!!\nPlease ensure that if you bet, you pay <@" $cWin "> for winning!!!\nPlease React to the Green Check-Mark below to show you paid!!!")) }}
-    {{ addMessageReactions 1082576076758335498 $cMsg ":white_check_mark:" }}
+    {{ $xMsg := sendMessageNoEscapeRetID 1082576076758335498 (cembed "title" (print "G.A.Y. Epic Cache Bet Round " $cRnd "!") "description" (print "Congratulations!!! Congratulations!!! Congratulations!!!\nWe have a winner!!! <@" $cWin "> has won Round " $cRnd "!!!\nPlease ensure that if you bet, you pay <@" $cWin "> for winning!!!\nPlease React to the Green Check-Mark below to show you paid!!!")) }}
+    {{ addMessageReactions 1082576076758335498 $xMsg ":white_check_mark:" }}
     {{ $cRnd2 := dbIncr 202 "cRnd" 1 }}
     {{ dbSet 202 "cRnd" $cRnd2 }}
-    {{ execCC 2 1081948603922259998 0 "launch" }}
+    {{ execCC 2 1082576076758335498 0 "launch" }}
   {{end}}
 {{end}}
+
+{{ deleteTrigger 0 }}
