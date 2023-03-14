@@ -1,4 +1,21 @@
-{{$emojis := sdict
+{{/* 
+        Trigger Type: Reaction [Added Reactions Only]
+
+        Purpose: Whenever a user reacts to the specified Emoji on the message posted from the
+          previous command, this code will check several things before committing the user to
+          the slot. If the Cache is 'OPEN' & User has not filled a slot, they will get added.
+          If they're already in the message, it will prevent them from signing up again. And 
+          finally, if they try to manually react to an already filled slot, it will prevent
+          that action from happening by seeing another user has already filled that slot.
+
+        Copyright (c): i aM kcK, 2023
+        Thanks to: Black Wolf#0001
+        License: MIT
+        Repository: https://github.com/iaMkcK/CACHEbot
+*/}}
+
+
+{{ $emojis := sdict
 "1️⃣" "Primary Weapon - OPEN"
 "2️⃣" "Special Weapon - OPEN"
 "3️⃣" "Destructive Weapon - OPEN"
@@ -6,29 +23,29 @@
 "5️⃣" "Upper Armour - OPEN"
 "6️⃣" "Lower Armour - OPEN"
 "7️⃣" "Boots - OPEN"
-"8️⃣" "Upgrade Module - OPEN"}}
+"8️⃣" "Upgrade Module - OPEN" }}
 
-{{ $cMsg := toInt (dbGet 200 "cMsg").Value}}
+{{ $cMsg := toInt (dbGet 200 "cMsg").Value }}
 {{if and (eq .Message.ID $cMsg) ($emojis.Get .Reaction.Emoji.APIName) (ne .Reaction.UserID 204255221017214977)}}
   {{if .ReactionAdded}}
     {{if (reFind ($emojis.Get .Reaction.Emoji.APIName) (index .Message.Embeds 0).Description)}}
       {{if (reFind .User.Mention (index $.Message.Embeds 0).Description)}}
-        {{sendMessage 1081948603922259998 (cembed "description" (print .User.Mention " You can't enter twice!"))}}
-        {{dbSet 210 "gBad" 1}}
-        {{deleteMessageReaction .Reaction.ChannelID .Reaction.MessageID .Reaction.UserID .Reaction.Emoji.APIName}}
+        {{ deleteMessage 1082576076758335498 (sendMessageRetID 1082576076758335498 (cembed "description" (print .User.Mention " You can't enter twice!"))) 20 }}
+        {{ dbSet 210 "gBad" 1 }}
+        {{ deleteMessageReaction 1082576076758335498 .Reaction.MessageID .Reaction.UserID .Reaction.Emoji.APIName }}
       {{else}}
-        {{sendMessageNoEscape 1081948603922259998 (cembed "description" (print .User.Mention " has joined in! Good Luck!"))}}
-        {{deleteAllMessageReactions 1081948603922259998 $cMsg .Reaction.Emoji.APIName}}
+        {{ deleteMessage 1082576076758335498 (sendMessageNoEscapeRetID 1082576076758335498 (cembed "description" (print .User.Mention " has joined in with " .Reaction.Emoji.APIName "! Good Luck!"))) 20 }}
+        {{deleteAllMessageReactions 1082576076758335498 $cMsg .Reaction.Emoji.APIName }}
         {{with (reFind ($emojis.Get .Reaction.Emoji.APIName) (index .Message.Embeds 0).Description)}}
           {{ $emoN := (reReplace "OPEN" ($emojis.Get $.Reaction.Emoji.APIName) "") }}
           {{ $update := (print $emoN $.User.Mention) }}
-          {{editMessage 1081948603922259998 $cMsg (cembed "title" (index $.Message.Embeds 0).Title "description" (reReplace . (index $.Message.Embeds 0).Description $update))}}
-          {{execCC 4 nil 2 "exec"}}
+          {{ editMessage 1082576076758335498 $cMsg (cembed "title" (index $.Message.Embeds 0).Title "description" (reReplace . (index $.Message.Embeds 0).Description $update)) }}
+          {{ execCC 4 nil 2 "exec" }}
         {{end}}
       {{end}}
     {{else}}
-      {{sendMessageNoEscape 1081948603922259998 (cembed "description" (print "Hey " .User.Mention " -- Pretty sure that is already taken..."))}}
-      {{deleteMessageReaction .Reaction.ChannelID .Reaction.MessageID .Reaction.UserID .Reaction.Emoji.APIName}}
+        {{ deleteMessage 1082576076758335498 (sendMessageNoEscapeRetID 1082576076758335498 (cembed "description" (print "Hey " .User.Mention " -- Pretty sure that is already taken..."))) 20 }}
+      {{ deleteMessageReaction 1082576076758335498 .Reaction.MessageID .Reaction.UserID .Reaction.Emoji.APIName }}
     {{end}}
   {{end}}
 {{end}}
