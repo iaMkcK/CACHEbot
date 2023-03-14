@@ -1,0 +1,19 @@
+{{/* 
+        Trigger Type: Command - /cInfo
+
+        Purpose: As we have posted the Sign-Up Message to a separate channel to reduce bot spam
+            in the lobby, this command forces the bot to post the Sign-Up Message to the lounge
+            for a 10 second period. It then deletes the message, acting like nothing happened.
+
+        Copyright (c): i aM kcK, 2023
+        License: MIT
+        Repository: https://github.com/iaMkcK/CACHEbot
+*/}}
+
+
+{{ $cMsg := toInt (dbGet 200 "cMsg").Value }}
+{{ $xMsg := getMessage 1082576076758335498 $cMsg }}
+
+{{ deleteMessage 1081948603922259998 (sendMessageNoEscapeRetID 1081948603922259998 (cembed "title" (index $xMsg.Embeds 0).Title "description" (index $xMsg.Embeds 0).Description)) 10 }}
+
+{{ deleteTrigger 0 }}

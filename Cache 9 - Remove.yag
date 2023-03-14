@@ -1,0 +1,31 @@
+{{/* 
+        Trigger Type: Command - /cRemove @<User Being Removed>
+
+        Role Reqs: Admin Only
+
+        Purpose: This was created because we've had users get banned from CCO while in a bet.
+          Since they can no longer play, they can't participate in the betting game anyways.
+          But it's also useful if someone is honest and goes 'You know what, I'm sorry, I'm
+          done. I've lost too much money, and at this point I'm not having fun anymore, so
+          please just remove me.' Which, let's be honest, even if we are just betting free
+          in-game items, things can go bad when any kind of gambling is involved, whether
+          it's real money or not. So this command solves that. Well.. Best we can.
+
+        Copyright (c): i aM kcK, 2023
+        License: MIT
+        Repository: https://github.com/iaMkcK/CACHEbot
+*/}}
+
+
+{{ $args := parseArgs 1 "Proper way of using is /cReplace @<Person Being Removed!> -- ex: /cReplace <@186921411359670275>\nIf you continue to need help, please contact <@186921411359670275>." (carg "userid" "Person Being Removed") }}
+{{ $cRe1 := (print "<@" ($args.Get 0) ">") }}
+{{ $cMsg := toInt (dbGet 200 "cMsg").Value }}
+{{ $rMsg := getMessage 1082576076758335498 $cMsg }}
+
+{{if (reFind $cRe1 (index $rMsg.Embeds 0).Description)}}
+  {{ editMessage 1082576076758335498 $cMsg (cembed "title" (index $rMsg.Embeds 0).Title "description" (reReplace $cRe1 (index $rMsg.Embeds 0).Description "OPEN")) }}
+  {{ sendMessageNoEscape nil (print "ADMIN COMMAND RECEIVED. We are replacing '" $cRe1 "' with 'OPEN' in the Bet List -- Command Processed Correctly.") }}
+{{else}}
+  {{ sendMessageNoEscape nil (print "ADMIN COMMAND RECEIVED... Except.. That user isn't in the betting list, so.. what the fuck are you doing?") }}
+{{end}}
+

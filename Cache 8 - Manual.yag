@@ -1,0 +1,65 @@
+{{/* 
+        Trigger Type: Command - /cManual <First Word of Cache> @<User Being Added>
+
+        Role Reqs: Admin Only
+
+        Purpose: This was created because I broke the bot one night. Sometimes when the bot breaks,
+          we restart it and this makes it easier to fill in the previously filled spots, instead
+          of using the previous command /cReplace. I kept it as well, but this lets you fill in
+          an "OPEN" slot with a user, forcing the bot to fill the slot. It checks if the slot is
+          open, and if so, it sets it to the User you specify. I do need to add the Delete Reaction
+          for the emoji that corresponds with the number, which should be easy. I'll do it later.
+
+        Copyright (c): i aM kcK, 2023
+        License: MIT
+        Repository: https://github.com/iaMkcK/CACHEbot
+*/}}
+
+
+{{ $args := parseArgs 2 "Proper way of using is /cManual <Cache To Add To> <Person Being Added!> -- ex: /cReplace Primary <@186921411359670275>\nIf you continue to need help, please contact <@186921411359670275>." (carg "string" "Cache Being Added To") (carg "string" "Person Added To Cache") }}
+
+{{ $cMsg := toInt (dbGet 200 "cMsg").Value }}
+{{ $rMsg := getMessage 1082576076758335498 $cMsg }}
+{{ $mRe1 := "" }}
+{{ $mRe2 := "" }}
+{{ if in .Member.Roles 1084094169498271844 }}
+  {{if eq ($args.Get 0) "Primary"}}
+    {{ $mRe1 = (print "Primary Weapon - OPEN") }}
+    {{ $mRe2 = (print "Primary Weapon - " ($args.Get 1)) }}
+  {{end}}
+  {{if eq ($args.Get 0) "Special"}}
+    {{ $mRe1 = (print "Special Weapon - OPEN") }}
+    {{ $mRe2 = (print "Special Weapon - " ($args.Get 1)) }}
+  {{end}}
+  {{if eq ($args.Get 0) "Destructive"}}
+    {{ $mRe1 = (print "Destructive Weapon - OPEN") }}
+    {{ $mRe2 = (print "Destructive Weapon - " ($args.Get 1)) }}
+  {{end}}
+  {{if eq ($args.Get 0) "Helmet"}}
+    {{ $mRe1 = (print "Helmet - OPEN") }}
+    {{ $mRe2 = (print "Helmet - " ($args.Get 1)) }}
+  {{end}}
+  {{if eq ($args.Get 0) "Upper"}}
+    {{ $mRe1 = (print "Upper Armour - OPEN") }}
+    {{ $mRe2 = (print "Upper Armour - " ($args.Get 1)) }}
+  {{end}}
+  {{if eq ($args.Get 0) "Lower"}}
+    {{ $mRe1 = (print "Lower Armour - OPEN") }}
+    {{ $mRe2 = (print "Lower Armour - " ($args.Get 1)) }}
+  {{end}}
+  {{if eq ($args.Get 0) "Boots"}}
+    {{ $mRe1 = (print "Boots - OPEN") }}
+    {{ $mRe2 = (print "Boots - " ($args.Get 1)) }}
+  {{end}}
+  {{if eq ($args.Get 0) "Upgrade"}}
+    {{ $mRe1 = (print "Upgrade Module - OPEN") }}
+    {{ $mRe2 = (print "Upgrade Module - " ($args.Get 1)) }}
+  {{end}}
+
+  {{if (reFind $mRe1 (index $rMsg.Embeds 0).Description)}}
+    {{ editMessage 1082576076758335498 $cMsg (cembed "title" (index $rMsg.Embeds 0).Title "description" (reReplace $mRe1 (index $rMsg.Embeds 0).Description $mRe2)) }}
+    {{ sendMessageNoEscape nil (print "ADMIN COMMAND RECEIVED... We are replacing '" $mRe1 "' with '" $mRe2 "' in the Bet List -- Command Processed Correctly.") }}
+  {{else}}
+    {{ sendMessageNoEscape nil (print "ADMIN COMMAND RECEIVED... We are replacing '" $mRe1 "' with '" $mRe2 "' in the Bet List -- Except.. That slot isn't open, so.. what the fuck are you doing?") }}
+  {{end}}
+{{end}}
